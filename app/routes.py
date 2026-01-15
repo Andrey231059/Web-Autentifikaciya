@@ -4,7 +4,7 @@ from app.models import User
 from app import app, db, bcrypt
 from app.forms import RegistrationForm, LoginForm
 from app.forms import UpdateProfileForm
-import bcrypt
+
 
 @app.route('/')
 @app.route('/home')
@@ -62,7 +62,7 @@ def profile():
 
         # Если введён новый пароль — обновляем его
         if form.password.data:
-            hashed_password = bcrypt.hashpw(form.password.data.encode('utf-8'), bcrypt.gensalt())
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
             current_user.password = hashed_password
 
         db.session.commit()
