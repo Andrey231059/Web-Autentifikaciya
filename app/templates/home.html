@@ -1,3 +1,4 @@
+<!--
 {% extends "base.html" %}
 
 {% block title %}
@@ -7,3 +8,15 @@ Home
 {% block content %}
     <h1>Добро пожаловать на домашнюю страницу!</h1>
 {% endblock %}
+-->
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1>Добро пожаловать!</h1>
+            <p>Зарегистрируйтесь или войдите в свой аккаунт.</p>
+            <a href="{{ url_for('register') }}" class="btn btn-success me-2">Регистрация</a>
+            <a href="{{ url_for('login') }}" class="btn btn-primary">Вход</a>
+        </div>
+    </div>
+</div>
