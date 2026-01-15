@@ -3,6 +3,8 @@ from flask_login import login_user, logout_user, current_user, login_required
 from app.models import User
 from app import app, db, bcrypt
 from app.forms import RegistrationForm, LoginForm
+from app.forms import UpdateProfileForm
+import bcrypt
 
 @app.route('/')
 @app.route('/home')
@@ -47,3 +49,29 @@ def logout():
 @login_required
 def account():
     return render_template('account.html')
+
+
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        # Обновляем имя и email
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+
+        # Если введён новый пароль — обновляем его
+        if form.password.data:
+            hashed_password = bcrypt.hashpw(form.password.data.encode('utf-8'), bcrypt.gensalt())
+            current_user.password = hashed_password
+
+        db.session.commit()
+        flash('Ваш профиль успешно обновлён!', 'success')
+        return redirect(url_for('profile'))
+
+    elif request.method == 'GET':
+        # Заполняем форму текущими данными
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+
+    return render_template('profile.html', title='Профиль', form=form)
